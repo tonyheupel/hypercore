@@ -12,29 +12,51 @@ namespace TonyHeupel.HyperJS
     /// JS.cs - Playing with JavaScript-type object creation within C# using closures
     /// and dynamic types with my HyperHypo (more than C#, less than JavaScript) class.
     /// </summary>
-    public static class JS
+    public class JS : HyperHypo
     {
-        #region Just playing around...
+        /// <summary>
+        /// cs is the instance accessor for the JS class so that instead of using
+        /// new Image(), you can use JS.cs.Image()
+        /// </summary>
+        public static dynamic cs { get { return _globalObject; } }
+        private static dynamic _globalObject = new JS();
+        
+        private JS ()
+	    {
+            dynamic that = this;  //Fun JavaScript trick to make this a dynamic so we can just bind things to it
+
+            #region Just playing around...
+            that.Image = new Func<int, int, dynamic>(delegate(int width, int height)
+            {
+                //dynamic img = new HyperHypo(Object());
+                dynamic img = new HyperHypo();
+                img.Prototype = Object(img);
+                img.width = width;
+                img.height = height;
+
+                img.doStuff = new Func<string, string>(name => string.Format("[name: {0}, width: {1}, height: {2}]", name, img.width, img.height));
+
+                //Private variables?
+                var _iamprivate = "private var";
+
+                img.getPrivate = new Func<string>(delegate() { return _iamprivate; });
+                img.setPrivate = new Func<string, object>(delegate(string newPrivate) { _iamprivate = newPrivate; return null; });
+
+                return img;
+            });
+            #endregion Just playing around...
+        }
+
+        #region Just playing around
+        public static dynamic Image()
+        {
+            return Image(0, 0);
+        }
         public static dynamic Image(int width, int height)
         {
-            //dynamic img = new HyperHypo(Object());
-            dynamic img = new HyperHypo();
-            img.Prototype = Object(img);
-            img.width = width;
-            img.height = height;
-
-            img.doStuff = new Func<string, string>(name => string.Format("[name: {0}, width: {1}, height: {2}]", name, img.width, img.height));
-
-            //Private variables?
-            var _iamprivate = "private var";
-
-            img.getPrivate = new Func<string>(delegate() { return _iamprivate; });
-            img.setPrivate = new Func<string, object>(delegate(string newPrivate) { _iamprivate = newPrivate; return null; });
-
-            return img;
+            return cs.Image(width, height);
         }
         #endregion
-
         #region undedfined
         private class Undefined
         {
