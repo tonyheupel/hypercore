@@ -21,11 +21,6 @@ namespace TonyHeupel.HyperCore
             get { return _prototype; }
             set
             {
-                if (_prototype != null && (value == null || value != _prototype))
-                {
-                    throw new NotImplementedException("We do not yet support resetting the prototype");
-                }
-
                 _prototype = value;
                 if (_prototype == null) return;
 
@@ -37,6 +32,11 @@ namespace TonyHeupel.HyperCore
         {
             get { return base.MemberProvider as HyperDictionary; }
             set { base.MemberProvider = value; }
+        }
+
+        public virtual bool HasOwnProperty(string name)
+        {
+            return this.MemberProvider.HasOwnProperty(name);
         }
     }
 }
