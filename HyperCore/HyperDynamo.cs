@@ -59,7 +59,19 @@ namespace TonyHeupel.HyperCore
         public object this[string name]
         {
             get { return _memberProvider[name]; }
-            set { _memberProvider[name] = value; }
+            set 
+            {
+                bool notifyChange = false;
+                if (_memberProvider.ContainsKey(name) && _memberProvider[name] != value) notifyChange = true;
+
+                _memberProvider[name] = value;
+
+                //Support INotifyPropertyChanged
+                if (notifyChange && PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(name));
+                }
+            }
         }
         #endregion
         
