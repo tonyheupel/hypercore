@@ -56,7 +56,7 @@ namespace TonyHeupel.HyperCore
         IDictionary<string, object> _memberProvider = null;
 
         #region Tony's Indexer coolness so this acts more like JavaScript
-        public object this[string name]
+        public virtual object this[string name]
         {
             get { return _memberProvider[name]; }
             set 
