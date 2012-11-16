@@ -15,23 +15,23 @@ namespace TonyHeupel.HyperCore
         {
             if (hyperDictionary == null) throw new ArgumentNullException("The parameter must be non-null");
 
-            _hyperDictionary = hyperDictionary;
+            this.hyperDictionary = hyperDictionary;
 
-            _currentEnumerator = includeParents ? _hyperDictionary.Keys.GetEnumerator() : _hyperDictionary.OwnKeys.GetEnumerator();
+            this.currentEnumerator = includeParents ? hyperDictionary.Keys.GetEnumerator() : hyperDictionary.OwnKeys.GetEnumerator();
         }
 
-        private HyperDictionary _hyperDictionary = null;
-        private IEnumerator<string> _currentEnumerator = null;
+        private HyperDictionary hyperDictionary = null;
+        private IEnumerator<string> currentEnumerator = null;
 
         protected KeyValuePair<string, object> GetCurrent()
         {
-            return new KeyValuePair<string, object>(_currentEnumerator.Current, _hyperDictionary[_currentEnumerator.Current]);
+            return new KeyValuePair<string, object>(currentEnumerator.Current, hyperDictionary[currentEnumerator.Current]);
         }
 
         //TODO: Determine if the Enumerator this supports is even needed
         protected KeyValuePair<string, Tuple<PropertyAction, object>> GetCurrentTuple()
         {
-            return new KeyValuePair<string, Tuple<PropertyAction, object>>(_currentEnumerator.Current, _hyperDictionary.GetPropertyTuple(_currentEnumerator.Current));
+            return new KeyValuePair<string, Tuple<PropertyAction, object>>(currentEnumerator.Current, hyperDictionary.GetPropertyTuple(currentEnumerator.Current));
         }
 
         #region IEnumerator<KeyValuePair<string, object>> Members
@@ -70,12 +70,12 @@ namespace TonyHeupel.HyperCore
 
         public bool MoveNext()
         {
-            return _currentEnumerator.MoveNext();
+            return currentEnumerator.MoveNext();
         }
 
         public void Reset()
         {
-            _currentEnumerator.Reset();
+            currentEnumerator.Reset();
         }
 
         #endregion

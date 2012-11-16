@@ -31,11 +31,11 @@ namespace TonyHeupel.HyperCore
 
         #region Fields
         //TODO: Consider creating a class instead of just using a Tuple
-        private Dictionary<string, Tuple<PropertyAction, object>> _properties = new Dictionary<string, Tuple<PropertyAction, object>>();
+        private Dictionary<string, Tuple<PropertyAction, object>> properties = new Dictionary<string, Tuple<PropertyAction, object>>();
 
-        private HyperDictionary _parent = null;
+        private HyperDictionary parent = null;
 
-        private IList<HyperDictionary> _children = new List<HyperDictionary>();
+        private IList<HyperDictionary> children = new List<HyperDictionary>();
         #endregion
 
         #region Constructors
@@ -94,23 +94,23 @@ namespace TonyHeupel.HyperCore
 
         public Tuple<PropertyAction, object> GetAncestorPropertyTuple(string name)
         {
-            if (_parent == null) throw new IndexOutOfRangeException(String.Format("Object \"{0}\" and it's ancestors do not have a property with name \"{1}\"", Id, name));
+            if (parent == null) throw new IndexOutOfRangeException(String.Format("Object \"{0}\" and it's ancestors do not have a property with name \"{1}\"", Id, name));
 
-            return _parent.GetPropertyTuple(name);
+            return parent.GetPropertyTuple(name);
         }
         public Tuple<PropertyAction, object> GetOwnPropertyTuple(string name)
         {
-            return _properties[name];
+            return properties[name];
         }
 
         public IEnumerable<KeyValuePair<string, Tuple<PropertyAction, object>>> OwnTuples
         {
-            get { return _properties; }
+            get { return properties; }
         }
         #endregion
         public ICollection<string> OwnKeys
         {
-            get { return _properties.Keys; }
+            get { return properties.Keys; }
         }
 
         public bool TryGetProperty(string name, out object value)
@@ -153,7 +153,7 @@ namespace TonyHeupel.HyperCore
             //First, go up to parents and then union with our Own property values
             object outValues;
             IEnumerable<object> values;
-            if (_parent != null && _parent.TryGetProperty(name, out outValues))
+            if (parent != null && parent.TryGetProperty(name, out outValues))
             {
                 //Got it
                 values = outValues as IEnumerable<object>;
@@ -165,9 +165,9 @@ namespace TonyHeupel.HyperCore
             }
 
 
-            if (HasOwnProperty(name) && _properties[name].Item1 == PropertyAction.Extend)
+            if (HasOwnProperty(name) && properties[name].Item1 == PropertyAction.Extend)
             {
-                values = values.Union(_properties[name].Item2 as IEnumerable<object>);
+                values = values.Union(properties[name].Item2 as IEnumerable<object>);
             }
 
             return values;
@@ -175,19 +175,19 @@ namespace TonyHeupel.HyperCore
 
         public bool HasOwnProperty(string name)
         {
-            return _properties.ContainsKey(name);
+            return properties.ContainsKey(name);
         }
 
         public bool ClearOwnProperty(string name)
         {
             if (!HasOwnProperty(name)) throw new IndexOutOfRangeException(String.Format("Object \"{0}\" does not have an owned property with name \"{1}\"", Id, name));
 
-            return _properties.Remove(name);
+            return properties.Remove(name);
         }
                 
         public void AddProperty(string name, object value)
         {
-            _properties[name] = new Tuple<PropertyAction, object>(PropertyAction.Add, value);
+            properties[name] = new Tuple<PropertyAction, object>(PropertyAction.Add, value);
         }
 
         public bool RemoveProperty(string name)
@@ -199,7 +199,7 @@ namespace TonyHeupel.HyperCore
         {
             try
             {
-                _properties[name] = new Tuple<PropertyAction, object>(PropertyAction.Remove, value);
+                properties[name] = new Tuple<PropertyAction, object>(PropertyAction.Remove, value);
                 return true;
             }
             catch
@@ -210,15 +210,15 @@ namespace TonyHeupel.HyperCore
 
         public void ExtendProperty(string name, IEnumerable<object> values)
         {
-            _properties[name] = new Tuple<PropertyAction, object>(PropertyAction.Extend, values);
+            properties[name] = new Tuple<PropertyAction, object>(PropertyAction.Extend, values);
         }
         #endregion
 
         #region Children and Parents
         public void AddChild(HyperDictionary child)
         {
-            _children.Add(child);
-            child._parent = this;
+            children.Add(child);
+            child.parent = this;
         }
 
         public void AddChildren(IEnumerable<HyperDictionary> children)
@@ -238,7 +238,7 @@ namespace TonyHeupel.HyperCore
         /// <param name="parent"></param>
         public void InheritsFrom(HyperDictionary parent)
         {
-            _parent = parent;
+            parent = parent;
         }
         #endregion
 
@@ -275,8 +275,8 @@ namespace TonyHeupel.HyperCore
                 HyperDictionary nextParent = null;
                 do
                 {
-                    nextParent = current._parent;
-                    foreach (string key in current._properties.Keys)
+                    nextParent = current.parent;
+                    foreach (string key in current.properties.Keys)
                     {
                         if (!removedKeys.Contains(key) && !keys.Contains(key))
                         {
@@ -329,7 +329,7 @@ namespace TonyHeupel.HyperCore
         public void Clear()
         {
             //Specifically do NOT allow this instance to clear a parent instance
-            _properties.Clear();
+            properties.Clear();
         }
 
         public bool Contains(KeyValuePair<string, object> item)

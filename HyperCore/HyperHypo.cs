@@ -15,17 +15,17 @@ namespace TonyHeupel.HyperCore
             Prototype = prototype;
         }
 
-        private HyperHypo _prototype = null;
+        private HyperHypo prototoype = null;
         public HyperHypo Prototype
         {
-            get { return _prototype; }
+            get { return prototoype; }
             set
             {
-                _prototype = value;
-                if (_prototype == null) return;
+                prototoype = value;
+                if (prototoype == null) return;
 
                 //Use InheritsFrom so we don't create some crazy all-encompassing graph of things
-                this.MemberProvider.InheritsFrom(_prototype.MemberProvider);
+                this.MemberProvider.InheritsFrom(prototoype.MemberProvider);
             }
         }
         public new HyperDictionary MemberProvider

@@ -46,25 +46,25 @@ namespace TonyHeupel.HyperCore
         public string Id { get; set; }
         public IDictionary<string, object> MemberProvider
         {
-            get { return _memberProvider; }
+            get { return memberProvider; }
             set
             {
-                _memberProvider = value ?? new Dictionary<string, object>();
+                memberProvider = value ?? new Dictionary<string, object>();
             }
         }
         // The inner dictionary.
-        IDictionary<string, object> _memberProvider = null;
+        IDictionary<string, object> memberProvider = null;
 
         #region Tony's Indexer coolness so this acts more like JavaScript
         public virtual object this[string name]
         {
-            get { return _memberProvider[name]; }
+            get { return MemberProvider[name]; }
             set 
             {
                 bool notifyChange = false;
-                if (_memberProvider.ContainsKey(name) && _memberProvider[name] != value) notifyChange = true;
+                if (MemberProvider.ContainsKey(name) && MemberProvider[name] != value) notifyChange = true;
 
-                _memberProvider[name] = value;
+                MemberProvider[name] = value;
 
                 //Support INotifyPropertyChanged
                 if (notifyChange && PropertyChanged != null)
@@ -83,7 +83,7 @@ namespace TonyHeupel.HyperCore
             // If the property name is found in the dictionary,
             // set the result parameter to the property value and return true.
             // Otherwise, return false.
-            return _memberProvider.TryGetValue(binder.Name, out result);
+            return MemberProvider.TryGetValue(binder.Name, out result);
         }
 
         // If you try to set a value of a property that is
@@ -92,12 +92,12 @@ namespace TonyHeupel.HyperCore
         {
             bool notifyChange = true;
             object currentValue;
-            if (_memberProvider.TryGetValue(binder.Name, out currentValue))
+            if (MemberProvider.TryGetValue(binder.Name, out currentValue))
             {
                 notifyChange = currentValue != value;
             }
 
-            _memberProvider[binder.Name] = value;
+            MemberProvider[binder.Name] = value;
 
             //Support INotifyPropertyChanged
             if (notifyChange && PropertyChanged != null)
@@ -116,32 +116,32 @@ namespace TonyHeupel.HyperCore
 
         public void Add(string key, object value)
         {
-            _memberProvider.Add(key, value);
+            MemberProvider.Add(key, value);
         }
 
         public bool ContainsKey(string key)
         {
-            return _memberProvider.ContainsKey(key);
+            return MemberProvider.ContainsKey(key);
         }
 
         public ICollection<string> Keys
         {
-            get { return _memberProvider.Keys; }
+            get { return MemberProvider.Keys; }
         }
 
         public bool Remove(string key)
         {
-            return _memberProvider.Remove(key);
+            return MemberProvider.Remove(key);
         }
 
         public bool TryGetValue(string key, out object value)
         {
-            return _memberProvider.TryGetValue(key, out value);
+            return MemberProvider.TryGetValue(key, out value);
         }
 
         public ICollection<object> Values
         {
-            get { return _memberProvider.Values; }
+            get { return MemberProvider.Values; }
         }
 
         #endregion
@@ -150,37 +150,37 @@ namespace TonyHeupel.HyperCore
 
         public void Add(KeyValuePair<string, object> item)
         {
-            _memberProvider.Add(item);
+            MemberProvider.Add(item);
         }
 
         public void Clear()
         {
-            _memberProvider.Clear();
+            MemberProvider.Clear();
         }
 
         public bool Contains(KeyValuePair<string, object> item)
         {
-            return _memberProvider.Contains(item);
+            return MemberProvider.Contains(item);
         }
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            _memberProvider.CopyTo(array, arrayIndex);
+            MemberProvider.CopyTo(array, arrayIndex);
         }
 
         public int Count
         {
-            get { return _memberProvider.Count; }
+            get { return MemberProvider.Count; }
         }
 
         public bool IsReadOnly
         {
-            get { return _memberProvider.IsReadOnly; }
+            get { return MemberProvider.IsReadOnly; }
         }
 
         public bool Remove(KeyValuePair<string, object> item)
         {
-            return _memberProvider.Remove(item);
+            return MemberProvider.Remove(item);
         }
 
         #endregion
@@ -189,7 +189,7 @@ namespace TonyHeupel.HyperCore
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return _memberProvider.GetEnumerator();
+            return MemberProvider.GetEnumerator();
         }
 
         #endregion
@@ -198,7 +198,7 @@ namespace TonyHeupel.HyperCore
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _memberProvider.GetEnumerator();
+            return MemberProvider.GetEnumerator();
         }
 
         #endregion
