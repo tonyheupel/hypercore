@@ -238,7 +238,7 @@ namespace TonyHeupel.HyperCore
         /// <param name="parent"></param>
         public void InheritsFrom(HyperDictionary parent)
         {
-            parent = parent;
+            this.parent = parent;
         }
         #endregion
 

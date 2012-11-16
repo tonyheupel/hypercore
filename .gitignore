@@ -3,4 +3,7 @@
 **/bin/**
 **/obj/**
 TestResults/**
+test-results/**
 *.*~
+.DS_Store
+*.userprefs
